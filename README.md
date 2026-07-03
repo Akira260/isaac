@@ -19,9 +19,9 @@
 
 ## 🛠️ 使用方法
 
-### 方案 A：在线即点即用（强烈推荐）
+### 方案 A：在线即点即用
 直接点击或复制下方链接，在任何浏览器（手机/电脑）中打开即可开始记录：
-🔗 [https://1914565583akira-code.github.io/isaac/](https://1914565583akira-code.github.io/isaac/)
+🔗 [https://1914565583akira-code.github.io/isaac/](https://akira260.github.io/isaac/)
 
 ### 方案 B：纯离线本地运行
 1. 下载本仓库中的 `index.html` 文件到本地。
