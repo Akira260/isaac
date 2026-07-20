@@ -286,6 +286,29 @@
       gap: 6px;
       align-items: center;
     }
+    .wiki-link-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      margin-left: 10px;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: inherit;
+      text-decoration: none;
+      font-size: 13px;
+      flex-shrink: 0;
+      transition: background-color 0.15s ease, transform 0.15s ease;
+    }
+    .wiki-link-btn:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+      transform: scale(1.1);
+    }
+    .wiki-link-btn:active {
+      transform: scale(0.95);
+    }
     .tag {
       font-size: 11px;
       font-weight: bold;
@@ -459,7 +482,8 @@
     <div class="splash-update-title">📌 本次更新内容</div>
     <div class="splash-text splash-update-text">
       • 新增「挑战关卡」清单，收录全部45个挑战，按编号顺序排列，并标注红/黄/白三档优先级<br>
-      • 新增「导出进度」「导入进度」功能，可将勾选记录导出为文件备份，更换设备或清除缓存前建议先导出保存
+      • 新增「导出进度」「导入进度」功能，可将勾选记录导出为文件备份，更换设备或清除缓存前建议先导出保存<br>
+      • 挑战关卡新增 🔗 跳转按钮，点击可直接打开该挑战对应的wiki详情页
     </div>
     <button class="splash-btn" onclick="window._closeSplash()">知道了</button>
   </div>
@@ -936,7 +960,7 @@
 
     // ---------- 状态 ----------
     const STORAGE_KEY = "isaac_repentance_v3_";
-    const SPLASH_KEY = "isaac_splash_shown_v2"; // 独立的开屏标记键名（v2：含挑战关卡/导入导出更新说明，老用户会再看一次）
+    const SPLASH_KEY = "isaac_splash_shown_v3"; // 独立的开屏标记键名（v3：新增wiki跳转按钮说明，老用户会再看一次）
     let currentGroup = 'normal';
     let currentFilter = 'all';
     let savedProgress = {};
@@ -978,6 +1002,16 @@
       if (item.priority === true || item.priority === 'high') return 'priority-row';
       if (item.priority === 'low') return 'low-row';
       return 'normal-row'; // false 或 'mid'
+    }
+
+    // 仅「挑战关卡」分组生成 wiki 跳转按钮，id 形如 "chal_1" ~ "chal_45"
+    function getWikiBtnHtml(item) {
+      if (currentGroup !== 'challenges') return '';
+      const match = /^chal_(\d+)$/.exec(item.id);
+      if (!match) return '';
+      const num = match[1];
+      const url = `https://isaac.huijiwiki.com/wiki/挑战/${num}`;
+      return `<a class="wiki-link-btn" href="${url}" target="_blank" rel="noopener noreferrer" title="查看Wiki条目" onclick="event.stopPropagation()">🔗</a>`;
     }
 
     function getTagHtml(item) {
@@ -1033,6 +1067,7 @@
           const rowClass = getRowClass(item);
           const checkedClass = isChecked ? 'checked-row' : '';
           const tagHtml = getTagHtml(item);
+          const wikiBtnHtml = getWikiBtnHtml(item);
 
           rowsHtml += `
             <div class="item-row ${rowClass} ${checkedClass}" onclick="window._toggleItem('${item.id}', this)">
@@ -1047,6 +1082,7 @@
                 </div>
                 <div class="tags-wrapper">${tagHtml}</div>
               </div>
+              ${wikiBtnHtml}
             </div>`;
         });
 
